@@ -9,7 +9,7 @@ local PhysicsService = game:GetService("PhysicsService")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local MethionSH_Env = type(getgenv) == "function" and getgenv() or _G
-local RELOAD_SCRIPT_RAW_URL = "https://raw.githubusercontent.com/Methions/Ybaa/refs/heads/main/MethionV2"
+local RELOAD_SCRIPT_RAW_URL = "https://raw.githubusercontent.com/Methions/Yba/refs/heads/main/Ybaa"
 local MAIN_AUTOSTART = MethionSH_Env.__MethionSHAutoStart == true
 if MAIN_AUTOSTART then MethionSH_Env.__MethionSHAutoStart = nil end
 
@@ -13188,126 +13188,17 @@ Players.PlayerRemoving:Connect(function(plr)
     end)
 end)
 
--- Item Serverhop loader tab. Uses Airflow's built-in Window:Confirm dialog.
-local ITEM_SERVERHOP_URL = "https://raw.githubusercontent.com/Methions/Ybaa/refs/heads/main/ServHopper"
-local ItemServerhopTab = Window:Tab({
-    Title = "Item Serverhop",
+-- Server Hop tab. Temporarily unavailable while maintenance is in progress.
+local ServerHopTab = Window:Tab({
+    Title = "Server Hop",
     Icon = "server",
-    Desc = "Load the Item Serverhop script.",
-})
-local ItemServerhopSection = ItemServerhopTab:Section({Title = "Script Switch", Side = "left"})
-ItemServerhopSection:Paragraph({
-    Title = "Load Item Serverhop",
-    Desc = "Confirming will close the Methion main UI and load Item Serverhop.",
+    Desc = "Server hopping is temporarily unavailable.",
 })
 
-local itemServerhopLoading = false
-local function loadItemServerhop()
-    if itemServerhopLoading then return end
-    itemServerhopLoading = true
-
-    local fetchOk, source = pcall(function()
-        return game:HttpGet(ITEM_SERVERHOP_URL)
-    end)
-    if not fetchOk or type(source) ~= "string" or source == "" then
-        itemServerhopLoading = false
-        Window:Notify({
-            Title = "Item Serverhop",
-            Content = "Could not download the script. Methion is still open.",
-            Type = "Error",
-            Duration = 5,
-        })
-        return
-    end
-
-    local loader, compileError = loadstring(source)
-    if type(loader) ~= "function" then
-        itemServerhopLoading = false
-        Window:Notify({
-            Title = "Item Serverhop",
-            Content = "Could not compile the script: " .. tostring(compileError),
-            Type = "Error",
-            Duration = 6,
-        })
-        return
-    end
-
-    -- Stop the visible automation features before removing the main window.
-    State.Farm = false
-    State.NoClip = false
-    State.ItemTracker = false
-    State.PlayerTracker = false
-    State.PlayerEsp = false
-    State.ItemEsp = false
-    State.HalloweenCandyFarm = false
-    pcall(function() ItemESP.setVisible(false) end)
-    pcall(function()
-        if TrackerESP.Gui and TrackerESP.Gui.Parent then TrackerESP.Gui:Destroy() end
-        TrackerESP.Gui = nil
-        table.clear(TrackerESP.Lines)
-    end)
-    pcall(function() Window:Destroy() end)
-
-    -- The source was downloaded and compiled before closing Methion.
-    local runOk, runError = pcall(loader)
-    if not runOk then
-        warn("[Item Serverhop] Failed to start: " .. tostring(runError))
-    end
-    itemServerhopLoading = false
-end
-
-ItemServerhopSection:Button({
-    Title = "Load Item Serverhop",
-    Desc = "open Item ServerHopper.",
-    Icon = "server",
-    Callback = function()
-        if itemServerhopLoading then return end
-        Window:Confirm({
-            Title = "Load Item Serverhop?",
-            Content = "Loading Item Serverhop will destroy the Methion main UI. Do you want to continue?",
-            Icon = "circle-help",
-            ConfirmText = "Yes, Load",
-            CancelText = "No, Keep Methion",
-            Callback = function()
-                loadItemServerhop()
-            end,
-            OnCancel = function()
-                -- The built-in confirmation closes itself; Methion stays open.
-            end,
-        })
-    end,
-})
-
-local ITEM_SERVERHOP_LOADSTRING = "loadstring(game:HttpGet('https://raw.githubusercontent.com/Methions/Ybaa/refs/heads/main/ServHopper'))()"
-
-ItemServerhopSection:Button({
-    Title = "Copy Item Serverhop Loadstring",
-    Desc = "Copy the standalone Item Serverhop loader.",
-    Icon = "copy",
-    Callback = function()
-        if type(setclipboard) ~= "function" then
-            Window:Notify({
-                Title = "Item Serverhop",
-                Content = "Clipboard copying is not supported by this executor.",
-                Type = "Warning",
-                Duration = 4,
-            })
-            return
-        end
-
-        local copied = pcall(setclipboard, ITEM_SERVERHOP_LOADSTRING)
-        Window:Notify({
-            Title = "Item Serverhop",
-            Content = copied and "Loadstring copied to clipboard." or "Could not copy the loadstring.",
-            Type = copied and "Success" or "Warning",
-            Duration = 4,
-        })
-    end,
-})
-
-ItemServerhopSection:Paragraph({
-    Title = "Auto Execute Instructions",
-    Desc = "Copy the loadstring and add it to your executor's own Auto Execute feature. It must run automatically when you join the game; otherwise, Item Serverhop will not work as intended.",
+local ServerHopSection = ServerHopTab:Section({Title = "Maintenance", Side = "left"})
+ServerHopSection:Paragraph({
+    Title = "Under Maintenance",
+    Desc = "Server Hop is currently under maintenance. The feature will be available again after the necessary updates are finished.",
 })
 
 local PreviousOthersRuntime = _G.__MethionOthersRuntime
