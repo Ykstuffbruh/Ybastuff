@@ -9,11 +9,11 @@ local PhysicsService = game:GetService("PhysicsService")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local MethionSH_Env = type(getgenv) == "function" and getgenv() or _G
-local RELOAD_SCRIPT_RAW_URL = "https://raw.githubusercontent.com/Methions/Yba/refs/heads/main/Ybaa"
+local RELOAD_SCRIPT_RAW_URL = "https://raw.githubusercontent.com/Methions/Yba/refs/heads/main/MethionV2"
 local MAIN_AUTOSTART = MethionSH_Env.__MethionSHAutoStart == true
 if MAIN_AUTOSTART then MethionSH_Env.__MethionSHAutoStart = nil end
 
-local AIRFLOW_LIBRARY_URL = "https://raw.githubusercontent.com/Methions/modf/refs/heads/main/perc"
+local AIRFLOW_LIBRARY_URL = "https://raw.githubusercontent.com/Methions/modf/refs/heads/main/kolo"
 local libraryOk, AirflowLibrary = pcall(function()
     local source = game:HttpGet(AIRFLOW_LIBRARY_URL)
     assert(type(source) == "string" and #source > 0, "The Airflow library returned an empty response")
